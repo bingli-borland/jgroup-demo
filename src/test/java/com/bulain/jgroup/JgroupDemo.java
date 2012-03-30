@@ -9,7 +9,7 @@ public class JgroupDemo {
     
     @Test
     public void testDemo() throws Exception {
-        JChannel channel = new JChannel("udp.xml");
+        JChannel channel = new JChannel();
         channel.setReceiver(new ReceiverAdapter() {
             public void receive(Message msg) {
                 System.out.println("received msg from " + msg.getSrc() + ": " + msg.getObject());
