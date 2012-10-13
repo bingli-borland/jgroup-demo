@@ -25,7 +25,7 @@ public class MulticastDemo {
     public void setUp() throws IOException {
         //init
         ms = new MulticastSocket(port);
-        mcastaddr = InetAddress.getByName("225.39.39.244");
+        mcastaddr = InetAddress.getByName("228.8.8.8");//from 224.0.0.0 to 239.255.255.255
         ms.joinGroup(mcastaddr);
 
         //start
@@ -33,15 +33,7 @@ public class MulticastDemo {
     }
 
     @After
-    @SuppressWarnings("static-access")
     public void tearDown() throws IOException {
-        //sleep
-        try {
-            Thread.currentThread().sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         //stop thread
         thread.setRunning(false);
 
@@ -51,19 +43,24 @@ public class MulticastDemo {
     }
 
     @Test
-    public void testSend() throws IOException, ClassNotFoundException {
+    @SuppressWarnings("static-access")
+    public void testMulticast() throws IOException, ClassNotFoundException {
+        System.out.println("testReceive");
+        thread.start();
+
         System.out.println("testSend");
         for (int i = 0; i < 20; i++) {
             String str = String.format("Test%3d", i);
             sendObject(str);
             System.out.println("Send: " + str);
         }
-    }
 
-    @Test
-    public void testReceive() {
-        System.out.println("testReceive");
-        thread.start();
+        //sleep
+        try {
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendObject(Object obj) throws IOException {
@@ -95,7 +92,6 @@ public class MulticastDemo {
                     }
                 } catch (IOException e) {
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
                 }
             }
         }
