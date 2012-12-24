@@ -14,7 +14,7 @@ import org.apache.catalina.tribes.group.GroupChannel;
 import org.junit.Test;
 
 public class TribesDemo {
-    
+
     @Test
     public void testDemo() throws Exception {
         //create a channel
@@ -30,7 +30,7 @@ public class TribesDemo {
 
         //start the channel
         channel.start(Channel.DEFAULT);
-
+        
         //create a message to be sent, message must implement java.io.Serializable
         //for performance reasons you probably want them to implement java.io.Externalizable
         Serializable myMsg = new MyMessage(Long.valueOf(1L), "message");
@@ -39,16 +39,25 @@ public class TribesDemo {
         Member[] group = channel.getMembers();
 
         //send the message
-        //channel.send(group, myMsg, Channel.SEND_OPTIONS_DEFAULT);
+        channel.send(group, myMsg, Channel.SEND_OPTIONS_DEFAULT);
+        
+        sleep(5);
     }
 
-    class MyMessageListener implements ChannelListener {
+    private void sleep(long seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static class MyMessageListener implements ChannelListener {
         private final Logger logger = Logger.getLogger(MyMessageListener.class);
 
         public boolean accept(Serializable msg, Member sender) {
-            logger.info("accept(Serializable, Member) - msg=" + msg + ", sender=" + sender);
-
-            return true;
+            boolean acpt = (msg instanceof MyMessage);
+            return acpt;
         }
 
         public void messageReceived(Serializable msg, Member sender) {
@@ -57,7 +66,7 @@ public class TribesDemo {
 
     }
 
-    class MyMemberListener implements MembershipListener {
+    static class MyMemberListener implements MembershipListener {
         private List<Member> listMember = new ArrayList<Member>();
 
         public void memberAdded(Member member) {
@@ -73,8 +82,8 @@ public class TribesDemo {
         }
 
     }
-    
-    class MyMessage implements Serializable {
+
+    static class MyMessage implements Serializable {
         private static final long serialVersionUID = -2671151021018367290L;
 
         private Long id;
