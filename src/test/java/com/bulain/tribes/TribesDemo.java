@@ -14,7 +14,7 @@ import org.apache.catalina.tribes.group.GroupChannel;
 import org.junit.Test;
 
 public class TribesDemo {
-
+    
     @Test
     public void testDemo() throws Exception {
         //create a channel
